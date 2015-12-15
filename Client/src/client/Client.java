@@ -99,7 +99,7 @@ public class Client extends JFrame {
 
         //String host = "82.100.67.62";
         //String host = "192.168.43.248";
-        String host = "212.25.147.173";
+        String host = "130.238.94.200";
         int port = 4444;
 
         try (
