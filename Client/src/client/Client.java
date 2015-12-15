@@ -99,7 +99,8 @@ public class Client extends JFrame {
 
         //String host = "82.100.67.62";
         //String host = "192.168.43.248";
-        String host = "212.25.147.173";
+        //String host = "212.25.147.173";
+        String host = "130.238.247.92";
         int port = 4444;
 
         try (
@@ -120,6 +121,7 @@ public class Client extends JFrame {
             //out.writeObject(fromUser);
 
             while (true) {
+                out.reset();
                 //fromUser = dummy;
                 Thread.sleep(2000);
                 System.out.println("Character name: " + dummy.getName());
