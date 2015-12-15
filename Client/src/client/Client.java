@@ -24,6 +24,7 @@ public class Client extends JFrame {
 
     private int x, y;
     // Load images
+    //Sebbe was here
     Image characterCurrent = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
     Image characterUp = new ImageIcon(Client.class.getResource("char_up.gif")).getImage();
     Image characterDown = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
