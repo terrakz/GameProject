@@ -17,6 +17,7 @@ public class Server {
         int port = 4444;
         ServerSocket serverSocket = new ServerSocket(port);
         boolean paused = false;
+        int numberOfClients = 0;
 
         // Load images
         Image characterCurrent = new ImageIcon(ServerTest.class.getResource("char_down.gif")).getImage();
@@ -37,7 +38,8 @@ public class Server {
             } catch(IOException e){
                 
             }
-            new Thread(new ServerThread(clientSocket, "Client 1")).start();
+            new Thread(new PlayerThread(clientSocket, numberOfClients++)).start();
+            //new Thread(new ListenerThread(clientSocket, numberOfClients++)).start();
             System.out.println("NEW THREAD");
         }
     }

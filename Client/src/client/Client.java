@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import common.MyCharacter;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -102,11 +104,13 @@ public class Client extends JFrame {
         //String host = "212.25.147.173";
         String host = "130.238.247.92";
         int port = 4444;
+        int numberOfClients;
 
         try (
                 Socket clientSocket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+                BufferedReader in2 = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 ) {
             MyCharacter fromServer;
             MyCharacter fromUser;
@@ -122,19 +126,14 @@ public class Client extends JFrame {
 
             while (true) {
                 out.reset();
-                //fromUser = dummy;
+                
                 Thread.sleep(2000);
                 System.out.println("Character name: " + dummy.getName());
                 System.out.println("Character x: " + dummy.getX());
                 System.out.println("Character y: " + dummy.getY());
-
-                //fromServer.Down();
-                //System.out.println("Moved down");
-                //fromServer.Right();
-                //System.out.println("Moved right");
-                //System.out.println("Character x: " + fromServer.getX());
-                //System.out.println("Character y: " + fromServer.getY());
                 out.writeObject(dummy);
+                //numberOfClients = Integer.parseInt(in2.readLine());
+                //System.out.println("Number of clients: " + numberOfClients);
             }
 
         } catch (UnknownHostException e) {

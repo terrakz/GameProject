@@ -17,40 +17,28 @@ import java.net.Socket;
  *
  * @author Daniel
  */
-public class ServerThread implements Runnable {
+public class ListenerThread implements Runnable {
 
     protected Socket clientSocket;
-    protected String threadName;
+    protected int clientID;
     MyCharacter input;
 
-    public ServerThread(Socket clientSocket, String threadName) {
+    public ListenerThread(Socket clientSocket, int clientID) {
         this.clientSocket = clientSocket;
-        this.threadName = threadName;
+        this.clientID = clientID;
     }
 
     public void run() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-
-            System.out.println("Thread started.");
-            MyCharacter char1 = new MyCharacter(50,50);
-            out.writeObject(char1);
-            System.out.println("Sent object.");
             
             while (true) {
                 Thread.sleep(2000);
-                System.out.println("Waiting for input from client...");
-                input = (MyCharacter) in.readObject();
-                System.out.println("Character name: " + input.getName());
-                System.out.println("Current x value: " + input.getX());
-                System.out.println("Current y value: " + input.getY());
             }
         } catch (IOException e) {
 
         } catch (InterruptedException e) {
-
-        } catch (ClassNotFoundException e) {
 
         }
     }
