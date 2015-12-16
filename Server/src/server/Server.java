@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 
 public class Server {
 
+    static int NUMBER_OF_CLIENTS = 0;
     /**
      * @param args the command line arguments
      */
@@ -17,15 +18,6 @@ public class Server {
         int port = 4444;
         ServerSocket serverSocket = new ServerSocket(port);
         boolean paused = false;
-        int numberOfClients = 0;
-
-        // Load images
-        Image characterCurrent = new ImageIcon(ServerTest.class.getResource("char_down.gif")).getImage();
-        Image characterUp = new ImageIcon(ServerTest.class.getResource("char_up.gif")).getImage();
-        Image characterDown = new ImageIcon(ServerTest.class.getResource("char_down.gif")).getImage();
-        Image characterLeft = new ImageIcon(ServerTest.class.getResource("char_left.gif")).getImage();
-        Image characterRight = new ImageIcon(ServerTest.class.getResource("char_right.gif")).getImage();
-        Image chest = new ImageIcon(ServerTest.class.getResource("chest.gif")).getImage();
 
         System.out.println("Starting...");
 
@@ -38,9 +30,9 @@ public class Server {
             } catch(IOException e){
                 
             }
-            new Thread(new PlayerThread(clientSocket, numberOfClients++)).start();
-            //new Thread(new ListenerThread(clientSocket, numberOfClients++)).start();
-            System.out.println("NEW THREAD");
+            new Thread(new PlayerThread(clientSocket, NUMBER_OF_CLIENTS++)).start();
+            new Thread(new ListenerThread(clientSocket, NUMBER_OF_CLIENTS++)).start();
+            System.out.println("NEW THREAD with index: " + NUMBER_OF_CLIENTS);
         }
     }
 

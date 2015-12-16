@@ -25,6 +25,7 @@ import javax.swing.KeyStroke;
 public class Client extends JFrame {
 
     private int x, y;
+    private int numberOfClients;
     // Load images
     //Sebbe was here
     Image characterCurrent = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
@@ -101,11 +102,10 @@ public class Client extends JFrame {
 
         //String host = "82.100.67.62";
         //String host = "192.168.43.248";
-        String host = "130.238.94.200";
+        //String host = "130.238.94.200";
         //String host = "212.25.147.173";
-        //String host = "130.238.247.92";
+        String host = "130.238.247.92";
         int port = 4444;
-        int numberOfClients;
 
         try (
                 Socket clientSocket = new Socket(host, port);
@@ -174,6 +174,9 @@ public class Client extends JFrame {
             // Draw other clients characters
 
             g.drawImage((Image) characterCurrent, dummy.getX(), dummy.getY(), rootPane);
+            for(int i = 0; i <= numberOfClients; i++){
+                
+            }
         }
     }
 }

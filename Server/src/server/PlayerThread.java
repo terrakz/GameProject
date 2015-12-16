@@ -20,12 +20,12 @@ import java.net.Socket;
 public class PlayerThread implements Runnable {
 
     protected Socket clientSocket;
-    protected int clientID;
+    protected int numberOfClients;
     MyCharacter input;
 
-    public PlayerThread(Socket clientSocket, int clientID) {
+    public PlayerThread(Socket clientSocket, int numberOfClients) {
         this.clientSocket = clientSocket;
-        this.clientID = clientID;
+        this.numberOfClients = numberOfClients;
     }
 
     public void run() {
@@ -34,7 +34,7 @@ public class PlayerThread implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
 
             System.out.println("PlayerThread started.");
-            MyCharacter char1 = new MyCharacter(50,50);
+            MyCharacter char1 = new MyCharacter(50,50,"Player ",numberOfClients);
             out.writeObject(char1);
             System.out.println("Sent object.");
             
@@ -45,6 +45,7 @@ public class PlayerThread implements Runnable {
                 System.out.println("Character name: " + input.getName());
                 System.out.println("Current x value: " + input.getX());
                 System.out.println("Current y value: " + input.getY());
+                System.out.println("ID is: " + input.getID());
             }
         } catch (IOException e) {
 

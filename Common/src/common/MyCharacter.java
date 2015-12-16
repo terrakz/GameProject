@@ -10,6 +10,7 @@ public class MyCharacter implements Serializable {
     private Image i;
     private int x;
     private int y;
+    private int id;
     
     public MyCharacter(String name, Image i){
         this.name = name;
@@ -20,10 +21,15 @@ public class MyCharacter implements Serializable {
         this.x = 100;
         this.y = 100;
     }
-    public MyCharacter(int x, int y){
-        this.name = "Default";
+    public MyCharacter(int x, int y, String name, int id){
+        this.id = id;
+        this.name = name + id;
         this.x = x;
         this.y = y;
+    }
+    
+    public int getID(){
+        return id;
     }
     
     public String getName(){

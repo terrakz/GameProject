@@ -34,6 +34,8 @@ public class ListenerThread implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             
             while (true) {
+                out.reset();
+                out.writeInt(clientID);
                 Thread.sleep(2000);
             }
         } catch (IOException e) {
