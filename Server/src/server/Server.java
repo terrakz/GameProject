@@ -30,9 +30,10 @@ public class Server {
             } catch(IOException e){
                 
             }
-            new Thread(new PlayerThread(clientSocket, NUMBER_OF_CLIENTS++)).start();
-            new Thread(new ListenerThread(clientSocket, NUMBER_OF_CLIENTS++)).start();
+            new Thread(new PlayerThread(clientSocket, NUMBER_OF_CLIENTS)).start();
+            //new Thread(new ListenerThread(clientSocket, NUMBER_OF_CLIENTS++)).start();
             System.out.println("NEW THREAD with index: " + NUMBER_OF_CLIENTS);
+            NUMBER_OF_CLIENTS++;
         }
     }
 

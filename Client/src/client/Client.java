@@ -13,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import common.MyCharacter;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -26,8 +24,7 @@ public class Client extends JFrame {
 
     private int x, y;
     private int numberOfClients;
-    // Load images
-    //Sebbe was here
+    
     Image characterCurrent = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
     Image characterUp = new ImageIcon(Client.class.getResource("char_up.gif")).getImage();
     Image characterDown = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
@@ -100,30 +97,21 @@ public class Client extends JFrame {
 
     public static void main(String args[]) throws IOException {
 
-        //String host = "82.100.67.62";
-        //String host = "192.168.43.248";
-        //String host = "130.238.94.200";
-        //String host = "212.25.147.173";
-        String host = "130.238.247.92";
+        String host = "192.168.1.248";
         int port = 4444;
 
         try (
                 Socket clientSocket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-                BufferedReader in2 = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 ) {
-            MyCharacter fromServer;
-            MyCharacter fromUser;
-
+            
             System.out.println("Retrieving object...");
             Thread.sleep(1000);
             dummy = (MyCharacter) in.readObject();
             Client client = new Client();
             client.setTitle("The Best Game in the World!");
             client.setVisible(true);
-            //fromUser = dummy;
-            //out.writeObject(fromUser);
 
             while (true) {
                 out.reset();
@@ -133,8 +121,6 @@ public class Client extends JFrame {
                 System.out.println("Character x: " + dummy.getX());
                 System.out.println("Character y: " + dummy.getY());
                 out.writeObject(dummy);
-                //numberOfClients = Integer.parseInt(in2.readLine());
-                //System.out.println("Number of clients: " + numberOfClients);
             }
 
         } catch (UnknownHostException e) {
@@ -149,23 +135,6 @@ public class Client extends JFrame {
     }
 
     class Window extends JPanel {
-
-        /*private int x, y;
-
-        public Window(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }*/
-        float interp;
-
-        public void setInterp(float interp) {
-            this.interp = interp;
-        }
-
-        public void update() {
-
-        }
-
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);

@@ -11,6 +11,7 @@ public class MyCharacter implements Serializable {
     private int x;
     private int y;
     private int id;
+    private int idarray[];
     
     public MyCharacter(String name, Image i){
         this.name = name;
@@ -22,7 +23,7 @@ public class MyCharacter implements Serializable {
         this.y = 100;
     }
     public MyCharacter(int x, int y, String name, int id){
-        this.id = id;
+        this.idarray[id] = id;
         this.name = name + id;
         this.x = x;
         this.y = y;
