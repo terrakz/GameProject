@@ -53,7 +53,7 @@ public class Client extends Applet implements Runnable, KeyListener {
         }
     }
 
-    public void updateCoordinates(int pid, int x2, int y2) {
+    public void updateCoordinates(int pid, int x2, int y2) throws ArrayIndexOutOfBoundsException {
         this.x[pid] = x2;
         this.y[pid] = y2;
     }
@@ -67,35 +67,55 @@ public class Client extends Applet implements Runnable, KeyListener {
 
     public boolean noCollision(String dir) {
         boolean result = true;
-        
+
         switch (dir) {
             case "right": {
                 for (int i = 0; i < 10; i++) {
-                    if(playerx+32 == x[i] && playery == y[i]){
+                    //if(i == playerid){i++;}
+                    if (playerx + 32 == x[i] && playery == y[i]) {
+                        System.out.println("Can't go right at index: " + i);
+                        System.out.println("playerx is: " + playerx);
+                        System.out.println("x[" + i + "] is: " + x[i]);
                         result = false;
                     }
                 }
+                break;
             }
             case "left": {
                 for (int i = 0; i < 10; i++) {
-                    if(playerx-32 == x[i] && playery == y[i]){
+                    //if(i == playerid){i++;}
+                    if (playerx - 32 == x[i] && playery == y[i]) {
+                        System.out.println("Can't go left at index: " + i);
+                        System.out.println("playerx is: " + playerx);
+                        System.out.println("x[" + i + "] is: " + x[i]);
                         result = false;
                     }
                 }
+                break;
             }
             case "up": {
                 for (int i = 0; i < 10; i++) {
-                    if(playerx == x[i] && playery-32 == y[i]){
+                    //if(i == playerid){i++;}
+                    if (playerx == x[i] && playery - 32 == y[i]) {
+                        System.out.println("Can't go up at index: " + i);
+                        System.out.println("playery is: " + playery);
+                        System.out.println("y[" + i + "] is: " + y[i]);
                         result = false;
                     }
                 }
+                break;
             }
             case "down": {
                 for (int i = 0; i < 10; i++) {
-                    if(playerx == x[i] && playery-32 == y[i]){
+                    //if(i == playerid){i++;}
+                    if (playerx == x[i] && playery + 32 == y[i]) {
+                        System.out.println("Can't go down at index: " + i);
+                        System.out.println("playery is: " + playery);
+                        System.out.println("y[" + i + "] is: " + y[i]);
                         result = false;
                     }
                 }
+                break;
             }
         }
         return result;
