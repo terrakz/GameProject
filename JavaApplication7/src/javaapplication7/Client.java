@@ -65,19 +65,55 @@ public class Client extends Applet implements Runnable, KeyListener {
         }
     }
 
+    public boolean noCollision(String dir) {
+        boolean result = true;
+        
+        switch (dir) {
+            case "right": {
+                for (int i = 0; i < 10; i++) {
+                    if(playerx+32 == x[i] && playery == y[i]){
+                        result = false;
+                    }
+                }
+            }
+            case "left": {
+                for (int i = 0; i < 10; i++) {
+                    if(playerx-32 == x[i] && playery == y[i]){
+                        result = false;
+                    }
+                }
+            }
+            case "up": {
+                for (int i = 0; i < 10; i++) {
+                    if(playerx == x[i] && playery-32 == y[i]){
+                        result = false;
+                    }
+                }
+            }
+            case "down": {
+                for (int i = 0; i < 10; i++) {
+                    if(playerx == x[i] && playery-32 == y[i]){
+                        result = false;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     public void run() {
         while (true) {
-            if (right == true) {
-                playerx += 10;
+            if (right == true && noCollision("right") == true) {
+                playerx += 32;
             }
-            if (left == true) {
-                playerx -= 10;
+            if (left == true && noCollision("left") == true) {
+                playerx -= 32;
             }
-            if (down == true) {
-                playery += 10;
+            if (down == true && noCollision("down") == true) {
+                playery += 32;
             }
-            if (up == true) {
-                playery -= 10;
+            if (up == true && noCollision("up") == true) {
+                playery -= 32;
             }
             if (right || left || up || down) {
                 try {
