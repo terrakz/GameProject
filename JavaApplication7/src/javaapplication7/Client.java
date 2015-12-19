@@ -1,6 +1,8 @@
 package javaapplication7;
 
 import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -35,19 +37,28 @@ public class Client extends Applet implements Runnable, KeyListener {
     int playerx;
     int playery;
     int playerimage = 0;
+    int playerspeed = 8;
+    int playersize = characterUp.getHeight(this);
+
+    Graphics graphicBuffer;
+    Image offscreen;
+    Dimension dim;
+    int winX, winY;
 
     /*public static void main(String[] args){
-        Client client = new Client();
-        client.init();
-    }*/
-    
+     Client client = new Client();
+     client.init();
+     }*/
     public void init() {
-        setSize(100, 100);
+        setSize(500, 500);
+        dim = getSize();
+        offscreen = createImage(dim.width, dim.height);
+        graphicBuffer = offscreen.getGraphics();
         addKeyListener(this);
         try {
             System.out.println("Connecting...");
             socket = new Socket("localhost", 4444);
-            System.out.println("connection succesful.");
+            System.out.println("Connection successful");
             in = new DataInputStream(socket.getInputStream());
             playerid = in.readInt();
             out = new DataOutputStream(socket.getOutputStream());
@@ -57,7 +68,7 @@ public class Client extends Applet implements Runnable, KeyListener {
             Thread thread2 = new Thread(this);
             thread2.start();
         } catch (Exception e) {
-            System.out.println("unable to start cluient");
+            System.out.println("Unable to start client");
         }
     }
 
@@ -85,10 +96,15 @@ public class Client extends Applet implements Runnable, KeyListener {
     }
 
     public void paint(Graphics g) {
+        graphicBuffer.clearRect(0, 0, dim.width, dim.height);
         for (int i = 0; i < 10; i++) {
-            //g.drawOval(x[i], y[i], 5, 5);
-            g.drawImage((Image) currentImage[i], x[i], y[i], this);
+            graphicBuffer.drawImage((Image) currentImage[i], x[i], y[i], this);
         }
+        g.drawImage(offscreen, 0, 0, this);
+    }
+
+    public void update(Graphics g) {
+        paint(g);
     }
 
     public boolean noCollision(String dir) {
@@ -97,8 +113,7 @@ public class Client extends Applet implements Runnable, KeyListener {
         switch (dir) {
             case "right": {
                 for (int i = 0; i < 10; i++) {
-                    //if(i == playerid){i++;}
-                    if (playerx + 32 == x[i] && playery == y[i]) {
+                    if (playerx + playersize == x[i] && (playery == y[i] || (playery + playersize > y[i] && playery - playersize < y[i]))) {
                         result = false;
                     }
                 }
@@ -106,8 +121,7 @@ public class Client extends Applet implements Runnable, KeyListener {
             }
             case "left": {
                 for (int i = 0; i < 10; i++) {
-                    //if(i == playerid){i++;}
-                    if (playerx - 32 == x[i] && playery == y[i]) {
+                    if (playerx - playersize == x[i] && (playery == y[i] || (playery + playersize > y[i] && playery - playersize < y[i]))) {
                         result = false;
                     }
                 }
@@ -115,8 +129,7 @@ public class Client extends Applet implements Runnable, KeyListener {
             }
             case "up": {
                 for (int i = 0; i < 10; i++) {
-                    //if(i == playerid){i++;}
-                    if (playerx == x[i] && playery - 32 == y[i]) {
+                    if (playery - playersize == y[i] && (playerx == x[i] || (playerx + playersize > x[i] && playerx - playersize < x[i]))) {
                         result = false;
                     }
                 }
@@ -124,8 +137,7 @@ public class Client extends Applet implements Runnable, KeyListener {
             }
             case "down": {
                 for (int i = 0; i < 10; i++) {
-                    //if(i == playerid){i++;}
-                    if (playerx == x[i] && playery + 32 == y[i]) {
+                    if (playery + playersize == y[i] && (playerx == x[i] || (playerx + playersize > x[i] && playerx - playersize < x[i]))) {
                         result = false;
                     }
                 }
@@ -138,16 +150,16 @@ public class Client extends Applet implements Runnable, KeyListener {
     public void run() {
         while (true) {
             if (right == true && noCollision("right") == true) {
-                playerx += 32;
+                playerx += playerspeed;
             }
             if (left == true && noCollision("left") == true) {
-                playerx -= 32;
+                playerx -= playerspeed;
             }
             if (down == true && noCollision("down") == true) {
-                playery += 32;
+                playery += playerspeed;
             }
             if (up == true && noCollision("up") == true) {
-                playery -= 32;
+                playery -= playerspeed;
             }
             if (right || left || up || down) {
                 try {
@@ -156,13 +168,13 @@ public class Client extends Applet implements Runnable, KeyListener {
                     out.writeInt(playery);
                     out.writeInt(playerimage);
                 } catch (Exception e) {
-                    System.out.println("error sending vcoordineates.");
+                    System.out.println("Couldn't send coordinates");
                 }
             }
 
             repaint();
             try {
-                Thread.sleep(300);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
