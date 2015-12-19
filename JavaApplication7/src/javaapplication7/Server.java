@@ -1,5 +1,6 @@
 package javaapplication7;
 
+import java.awt.Image;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class Server {
         int playeridin;
         int xin;
         int yin;
+        int imagein;
 
         public Users(DataOutputStream out, DataInputStream in, Users[] user, int pid) {
             this.out = out;
@@ -62,15 +64,19 @@ public class Server {
                     playeridin = in.readInt();
                     xin = in.readInt();
                     yin = in.readInt();
+                    imagein = in.readInt();
                     for (int i = 0; i < 10; i++) {
                         if (user[i] != null) {
                             user[i].out.writeInt(playeridin);
                             user[i].out.writeInt(xin);
                             user[i].out.writeInt(yin);
+                            user[i].out.writeInt(imagein);
                         }
                     }
                 } catch (IOException e) {
                     user[playerid] = null;
+                    System.out.println("User " + playerid + " has left.");
+                    break;
                 }
             }
         }

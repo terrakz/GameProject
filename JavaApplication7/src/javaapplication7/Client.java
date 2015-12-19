@@ -9,6 +9,7 @@ import java.net.*;
 import java.util.Scanner;
 import java.io.*;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 public class Client extends Applet implements Runnable, KeyListener {
 
@@ -27,18 +28,25 @@ public class Client extends Applet implements Runnable, KeyListener {
 
     int[] x = new int[10];
     int[] y = new int[10];
+    Image[] currentImage = new Image[10];
 
     boolean left, down, right, up;
 
     int playerx;
     int playery;
+    int playerimage = 0;
 
+    /*public static void main(String[] args){
+        Client client = new Client();
+        client.init();
+    }*/
+    
     public void init() {
         setSize(100, 100);
         addKeyListener(this);
         try {
             System.out.println("Connecting...");
-            socket = new Socket("82.100.67.62", 4444);
+            socket = new Socket("localhost", 4444);
             System.out.println("connection succesful.");
             in = new DataInputStream(socket.getInputStream());
             playerid = in.readInt();
@@ -53,15 +61,33 @@ public class Client extends Applet implements Runnable, KeyListener {
         }
     }
 
-    public void updateCoordinates(int pid, int x2, int y2) throws ArrayIndexOutOfBoundsException {
+    public void updateCoordinates(int pid, int x2, int y2, int image) throws ArrayIndexOutOfBoundsException {
         this.x[pid] = x2;
         this.y[pid] = y2;
+        switch (image) {
+            case 0: {
+                currentImage[pid] = characterUp;
+                break;
+            }
+            case 1: {
+                currentImage[pid] = characterDown;
+                break;
+            }
+            case 2: {
+                currentImage[pid] = characterLeft;
+                break;
+            }
+            case 3: {
+                currentImage[pid] = characterRight;
+                break;
+            }
+        }
     }
 
     public void paint(Graphics g) {
         for (int i = 0; i < 10; i++) {
             //g.drawOval(x[i], y[i], 5, 5);
-            g.drawImage((Image) characterCurrent, x[i], y[i], this);
+            g.drawImage((Image) currentImage[i], x[i], y[i], this);
         }
     }
 
@@ -73,9 +99,6 @@ public class Client extends Applet implements Runnable, KeyListener {
                 for (int i = 0; i < 10; i++) {
                     //if(i == playerid){i++;}
                     if (playerx + 32 == x[i] && playery == y[i]) {
-                        System.out.println("Can't go right at index: " + i);
-                        System.out.println("playerx is: " + playerx);
-                        System.out.println("x[" + i + "] is: " + x[i]);
                         result = false;
                     }
                 }
@@ -85,9 +108,6 @@ public class Client extends Applet implements Runnable, KeyListener {
                 for (int i = 0; i < 10; i++) {
                     //if(i == playerid){i++;}
                     if (playerx - 32 == x[i] && playery == y[i]) {
-                        System.out.println("Can't go left at index: " + i);
-                        System.out.println("playerx is: " + playerx);
-                        System.out.println("x[" + i + "] is: " + x[i]);
                         result = false;
                     }
                 }
@@ -97,9 +117,6 @@ public class Client extends Applet implements Runnable, KeyListener {
                 for (int i = 0; i < 10; i++) {
                     //if(i == playerid){i++;}
                     if (playerx == x[i] && playery - 32 == y[i]) {
-                        System.out.println("Can't go up at index: " + i);
-                        System.out.println("playery is: " + playery);
-                        System.out.println("y[" + i + "] is: " + y[i]);
                         result = false;
                     }
                 }
@@ -109,9 +126,6 @@ public class Client extends Applet implements Runnable, KeyListener {
                 for (int i = 0; i < 10; i++) {
                     //if(i == playerid){i++;}
                     if (playerx == x[i] && playery + 32 == y[i]) {
-                        System.out.println("Can't go down at index: " + i);
-                        System.out.println("playery is: " + playery);
-                        System.out.println("y[" + i + "] is: " + y[i]);
                         result = false;
                     }
                 }
@@ -140,6 +154,7 @@ public class Client extends Applet implements Runnable, KeyListener {
                     out.writeInt(playerid);
                     out.writeInt(playerx);
                     out.writeInt(playery);
+                    out.writeInt(playerimage);
                 } catch (Exception e) {
                     System.out.println("error sending vcoordineates.");
                 }
@@ -147,7 +162,7 @@ public class Client extends Applet implements Runnable, KeyListener {
 
             repaint();
             try {
-                Thread.sleep(400);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -157,15 +172,19 @@ public class Client extends Applet implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == 37) {
             left = true;
+            playerimage = 2;
         }
         if (e.getKeyCode() == 38) {
             up = true;
+            playerimage = 0;
         }
         if (e.getKeyCode() == 39) {
             right = true;
+            playerimage = 3;
         }
         if (e.getKeyCode() == 40) {
             down = true;
+            playerimage = 1;
         }
     }
 
@@ -204,7 +223,8 @@ public class Client extends Applet implements Runnable, KeyListener {
                     int playerid = in.readInt();
                     int x = in.readInt();
                     int y = in.readInt();
-                    client.updateCoordinates(playerid, x, y);
+                    int image = in.readInt();
+                    client.updateCoordinates(playerid, x, y, image);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
