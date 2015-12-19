@@ -1,6 +1,5 @@
 package javaapplication7;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,12 +7,11 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-public class Client extends Applet implements Runnable, KeyListener {
+public class Client extends JFrame implements Runnable, KeyListener {
 
     Image characterCurrent = new ImageIcon(Client.class.getResource("char_down.gif")).getImage();
     Image characterUp = new ImageIcon(Client.class.getResource("char_up.gif")).getImage();
@@ -41,19 +39,29 @@ public class Client extends Applet implements Runnable, KeyListener {
     int playersize = characterUp.getHeight(this);
 
     Graphics graphicBuffer;
-    Image offscreen;
+    Image offScreenRender;
     Dimension dim;
-    int winX, winY;
 
-    /*public static void main(String[] args){
-     Client client = new Client();
-     client.init();
-     }*/
+    static Client client = new Client();
+
+    public Client() {
+        setTitle("The worst game in the world");
+        setBackground(Color.WHITE);
+        pack();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(800, 550);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        client.init();
+    }
+
     public void init() {
-        setSize(500, 500);
         dim = getSize();
-        offscreen = createImage(dim.width, dim.height);
-        graphicBuffer = offscreen.getGraphics();
+        offScreenRender = createImage(dim.width, dim.height);
+        graphicBuffer = offScreenRender.getGraphics();
         addKeyListener(this);
         try {
             System.out.println("Connecting...");
@@ -99,8 +107,9 @@ public class Client extends Applet implements Runnable, KeyListener {
         graphicBuffer.clearRect(0, 0, dim.width, dim.height);
         for (int i = 0; i < 10; i++) {
             graphicBuffer.drawImage((Image) currentImage[i], x[i], y[i], this);
+            graphicBuffer.drawString("Player " + i, x[i]-3, y[i] - 6);
         }
-        g.drawImage(offscreen, 0, 0, this);
+        g.drawImage(offScreenRender, 0, 0, this);
     }
 
     public void update(Graphics g) {
@@ -171,8 +180,7 @@ public class Client extends Applet implements Runnable, KeyListener {
                     System.out.println("Couldn't send coordinates");
                 }
             }
-
-            repaint();
+            client.repaint();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
