@@ -1,6 +1,5 @@
 package javaapplication7;
 
-import java.awt.Image;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

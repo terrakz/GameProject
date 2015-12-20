@@ -81,25 +81,30 @@ public class Client extends JFrame implements Runnable, KeyListener {
     }
 
     public void updateCoordinates(int pid, int x2, int y2, int image) throws ArrayIndexOutOfBoundsException {
-        this.x[pid] = x2;
-        this.y[pid] = y2;
-        switch (image) {
-            case 0: {
-                currentImage[pid] = characterUp;
-                break;
+        try {
+            this.x[pid] = x2;
+            this.y[pid] = y2;
+
+            switch (image) {
+                case 0: {
+                    currentImage[pid] = characterUp;
+                    break;
+                }
+                case 1: {
+                    currentImage[pid] = characterDown;
+                    break;
+                }
+                case 2: {
+                    currentImage[pid] = characterLeft;
+                    break;
+                }
+                case 3: {
+                    currentImage[pid] = characterRight;
+                    break;
+                }
             }
-            case 1: {
-                currentImage[pid] = characterDown;
-                break;
-            }
-            case 2: {
-                currentImage[pid] = characterLeft;
-                break;
-            }
-            case 3: {
-                currentImage[pid] = characterRight;
-                break;
-            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("DEBUG: Array index was out of bounds. Index: " + pid);
         }
     }
 
@@ -107,7 +112,7 @@ public class Client extends JFrame implements Runnable, KeyListener {
         graphicBuffer.clearRect(0, 0, dim.width, dim.height);
         for (int i = 0; i < 10; i++) {
             graphicBuffer.drawImage((Image) currentImage[i], x[i], y[i], this);
-            graphicBuffer.drawString("Player " + i, x[i]-3, y[i] - 6);
+            graphicBuffer.drawString("Player " + i, x[i] - 3, y[i] - 6);
         }
         g.drawImage(offScreenRender, 0, 0, this);
     }
@@ -246,7 +251,10 @@ public class Client extends JFrame implements Runnable, KeyListener {
                     int image = in.readInt();
                     client.updateCoordinates(playerid, x, y, image);
                 } catch (IOException e) {
+                    System.out.println("Server died.");
+                    // Handle a move to the secondary server here
                     e.printStackTrace();
+                    break;
                 }
             }
         }
